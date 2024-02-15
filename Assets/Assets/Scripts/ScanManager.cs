@@ -13,8 +13,17 @@ public class ScanManager : MonoBehaviour
     public TextMeshProUGUI textOut;
     public RectTransform scanzone;
 
+    public float timeBetweenScans;
+
+    public GameObject scanMessage;
+    public GameObject popUp;
+    public GameObject scanning;
+    public GameObject startScan;
+
     bool isCamAvailable;
     WebCamTexture cameratexture;
+
+    IEnumerator ScanCo;
 
     private void Update()
     {
@@ -30,27 +39,27 @@ public class ScanManager : MonoBehaviour
     // Update is called once per frame
     void UpdateCameraRender()
     {
-        if(isCamAvailable == false)
+        if (isCamAvailable == false)
         {
             return;
         }
-        float ratio =(float)cameratexture.width / (float)cameratexture.height;
+        float ratio = (float)cameratexture.width / (float)cameratexture.height;
         aspectRatioFitter.aspectRatio = ratio;
 
         int orientation = -cameratexture.videoRotationAngle;
-        rawImageBackground.rectTransform.localEulerAngles = new Vector3 (0, 0, orientation);
+        rawImageBackground.rectTransform.localEulerAngles = new Vector3(0, 0, orientation);
     }
 
     private void SetupCamera()
     {
         WebCamDevice[] devices = WebCamTexture.devices;
-        if(devices.Length == 0)
+        if (devices.Length == 0)
         {
             isCamAvailable = false;
             return;
         }
-        
-        foreach(WebCamDevice device in devices)
+
+        foreach (WebCamDevice device in devices)
         {
             cameratexture = new WebCamTexture(device.name, (int)scanzone.rect.width, (int)scanzone.rect.height);
             break;
@@ -60,11 +69,26 @@ public class ScanManager : MonoBehaviour
         rawImageBackground.texture = cameratexture;
         isCamAvailable = true;
 
+    } 
+
+    IEnumerator ScanCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(timeBetweenScans);
+            TryScan();
+        }
     }
     
     public void OnClick_Scan()
     {
-        TryScan();
+        if(ScanCo == null)
+        {
+            cameratexture.Play();
+            ScanCo = ScanCoroutine();
+            StartCoroutine(ScanCo);
+        }
+        
     }
 
     private void TryScan()
@@ -76,14 +100,36 @@ public class ScanManager : MonoBehaviour
 
             if(result != null)
             {
-                textOut.text = result.Text;
+                scanMessage.SetActive(true);
+                scanning.SetActive(false);
+                StopCoroutine(ScanCo);
+                cameratexture.Stop();
+                ScanCo = null;
             }
         }
         catch
         {
-            textOut.text = "Failed to read";
+            popUp.SetActive(true);
+            startScan.SetActive(true);
+            scanning.SetActive(false);
         }
     }
-    
+
+    public void StopScan()
+    {
+        if(ScanCo != null)
+        {
+            cameratexture.Stop();
+            StopCoroutine(ScanCo);
+        }
+    }
+
+
+    public void OnClick_ClosePopup()
+    {
+        popUp.SetActive(false);
+
+    }
+
 
 }
