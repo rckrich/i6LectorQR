@@ -10,7 +10,6 @@ public class ScanManager : MonoBehaviour
     public RawImage rawImageBackground;
 
     public AspectRatioFitter aspectRatioFitter;
-    public TextMeshProUGUI textOut;
     public RectTransform scanzone;
 
     public float timeBetweenScans;
@@ -97,10 +96,11 @@ public class ScanManager : MonoBehaviour
         {
             IBarcodeReader reader = new BarcodeReader();
             Result result = reader.Decode(cameratexture.GetPixels32(), cameratexture.width, cameratexture.height);
-
-            if(result != null)
+            if (result != null)
             {
+                Debug.Log(result.Text);
                 scanMessage.SetActive(true);
+                scanMessage.GetComponent<ProcessScan>().Initialize(result.Text);
                 scanning.SetActive(false);
                 StopCoroutine(ScanCo);
                 cameratexture.Stop();
@@ -109,6 +109,9 @@ public class ScanManager : MonoBehaviour
         }
         catch
         {
+            StopCoroutine(ScanCo);
+            cameratexture.Stop();
+            ScanCo = null;
             popUp.SetActive(true);
             startScan.SetActive(true);
             scanning.SetActive(false);
