@@ -12,19 +12,17 @@ public class ProcessScan : MonoBehaviour
 
     private List<GameObject> TextList = new List<GameObject>();
 
-    public void Initialize(string _result)
-    {
+    private void OnEnable() {
+        Debug.Log(2);
+    }
 
-        StartCoroutine(Yucatani6WebCalls.CR_User(_result, OnCallBack_Initialize_User));
+    public void InitializeScan(UserRoot tempuser)
+    {
         activityContainer.SetActive(false);
         conferenceContainer.SetActive(false);
 
         Canvas.ForceUpdateCanvases();
-    }
-
-    public void OnCallBack_Initialize_User(object[] list)
-    {
-        UserRoot tempuser = (UserRoot)list[1];
+        
         nametxt.text = tempuser.user.name;
         email.text = tempuser.user.email;
 

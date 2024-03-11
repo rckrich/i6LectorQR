@@ -30,7 +30,8 @@ public class Yucatani6WebCalls : WebCalls
                     //TODO Response when unauthorized
                 }
 
-                DebugLogManager.instance.DebugLog("Protocol Error or Connection Error on fetch profile. Response Code: " + webRequest.responseCode + ". Result: " + webRequest.result.ToString());
+                //Debug.Log("Protocol Error or Connection Error on fetch profile. Response Code: " + webRequest.responseCode + ". Result: " + webRequest.result.ToString());
+                _callback(new object[] { webRequest.responseCode });
                 yield break;
             }
             else
@@ -48,7 +49,7 @@ public class Yucatani6WebCalls : WebCalls
                 }
             }
 
-            DebugLogManager.instance.DebugLog("Failed fetch conference status result: " + jsonResult);
+            //Debug.Log("Failed fetch conference status result: " + jsonResult);
             yield break;
         }
     }
@@ -75,7 +76,7 @@ public class Yucatani6WebCalls : WebCalls
                     //TODO Response when unauthorized
                 }
 
-                DebugLogManager.instance.DebugLog("Protocol Error or Connection Error on fetch profile. Response Code: " + webRequest.responseCode + ". Result: " + webRequest.result.ToString());
+                //Debug.Log("Protocol Error or Connection Error on fetch profile. Response Code: " + webRequest.responseCode + ". Result: " + webRequest.result.ToString());
                 yield break;
             }
             else
@@ -93,7 +94,7 @@ public class Yucatani6WebCalls : WebCalls
                 }
             }
 
-            DebugLogManager.instance.DebugLog("Failed fetch several registered activities result: " + jsonResult);
+            //Debug.Log("Failed fetch several registered activities result: " + jsonResult);
             yield break;
         }
     }
@@ -121,7 +122,7 @@ public class Yucatani6WebCalls : WebCalls
                     //TODO Response when unauthorized
                 }
 
-                DebugLogManager.instance.DebugLog("Protocol Error or Connection Error on fetch profile. Response Code: " + webRequest.responseCode + ". Result: " + webRequest.result.ToString());
+                //Debug.Log("Protocol Error or Connection Error on fetch profile. Response Code: " + webRequest.responseCode + ". Result: " + webRequest.result.ToString());
                 yield break;
             }
             else
@@ -131,7 +132,7 @@ public class Yucatani6WebCalls : WebCalls
                 if (webRequest.isDone)
                 {
                     jsonResult = webRequest.downloadHandler.text;
-                    DebugLogManager.instance.DebugLog("Fetch several registered conferences result: " + jsonResult);
+                    Debug.Log("Fetch several registered conferences result: " + jsonResult);
                     JsonSerializerSettings settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                     GetSeveralConference getSeveralConference = JsonConvert.DeserializeObject<GetSeveralConference>(jsonResult, settings);
                     _callback(new object[] { webRequest.responseCode, getSeveralConference });
@@ -139,7 +140,7 @@ public class Yucatani6WebCalls : WebCalls
                 }
             }
 
-            DebugLogManager.instance.DebugLog("Failed fetch several registered conferences result: " + jsonResult);
+            //Debug.Log("Failed fetch several registered conferences result: " + jsonResult);
             yield break;
         }
     }

@@ -98,10 +98,8 @@ public class ScanManager : MonoBehaviour
             Result result = reader.Decode(cameratexture.GetPixels32(), cameratexture.width, cameratexture.height);
             if (result != null)
             {
-                Debug.Log(result.Text);
-                scanMessage.SetActive(true);
-                scanMessage.GetComponent<ProcessScan>().Initialize(result.Text);
-                scanning.SetActive(false);
+                
+                StartCoroutine(Yucatani6WebCalls.CR_User(result.Text, OnCallBack_Initialize_User));
                 StopCoroutine(ScanCo);
                 cameratexture.Stop();
                 ScanCo = null;
@@ -109,13 +107,34 @@ public class ScanManager : MonoBehaviour
         }
         catch
         {
-            StopCoroutine(ScanCo);
+            if(ScanCo != null){
+                StopCoroutine(ScanCo);
+            }
+            
             cameratexture.Stop();
             ScanCo = null;
             popUp.SetActive(true);
             startScan.SetActive(true);
             scanning.SetActive(false);
         }
+    }
+
+    public void OnCallBack_Initialize_User(object[] list){
+        if(list[0].ToString() != "200"){
+            if(ScanCo != null){
+                StopCoroutine(ScanCo);
+            }
+            cameratexture.Stop();
+            ScanCo = null;
+            popUp.SetActive(true);
+            startScan.SetActive(true);
+            scanning.SetActive(false);
+            return;
+        }
+        scanMessage.SetActive(true);
+        UserRoot tempuser = (UserRoot)list[1];
+        scanMessage.GetComponent<ProcessScan>().InitializeScan(tempuser);
+        scanning.SetActive(false);
     }
 
     public void StopScan()
