@@ -145,6 +145,7 @@ public class ScanManager : MonoBehaviour
     }
 
     public void OnCallBack_Initialize_User(object[] list){
+        rawImage.SetActive(false);
         if(list[0].ToString() != "200"){
             if(ScanCo != null){
                 StopCoroutine(ScanCo);
@@ -154,6 +155,7 @@ public class ScanManager : MonoBehaviour
             popUp.SetActive(true);
             startScan.SetActive(true);
             scanning.SetActive(false);
+            rawImage.SetActive(true);
             return;
         }
         scanMessage.SetActive(true);
