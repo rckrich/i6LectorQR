@@ -5,9 +5,9 @@ using ZXing;
 using TMPro;
 using UnityEngine.UI;
 
-#if UNITY_ANDROID
-    using UnityEngine.Android;
-#endif
+
+using UnityEngine.Android;
+
 
 
 public class ScanManager : MonoBehaviour
@@ -41,7 +41,7 @@ public class ScanManager : MonoBehaviour
     void Start()
     {
         ConfigViewPort();
-        OnClick_AskAuth();
+        SetupCamera();
     }
 
     public void ConfigViewPort(){
@@ -219,6 +219,12 @@ public class ScanManager : MonoBehaviour
     }
 
     public void OnClick_AskAuth(){
+        if(isCamAvailable){
+            StartScan.SetActive(true);
+            Intro.SetActive(false);
+            return;
+        }
+
         #if UNITY_IOS
             IOSAuth();
             return;
