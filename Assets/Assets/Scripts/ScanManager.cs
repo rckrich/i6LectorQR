@@ -15,11 +15,12 @@ public class ScanManager : MonoBehaviour
     public float timeBetweenScans;
 
     public GameObject scanMessage;
-    public GameObject popUp;
+    public GameObject popUp, popUpNoAuth;
     public GameObject scanning;
     public GameObject startScan;
     public GameObject rawImage;
 
+    public GameObject StartScan, Intro;
 
     bool isCamAvailable;
     WebCamTexture cameratexture;
@@ -61,6 +62,9 @@ public class ScanManager : MonoBehaviour
 
     private void SetupCamera()
     {
+        if(isCamAvailable){
+            return;
+        }
         WebCamDevice[] devices = WebCamTexture.devices;
         if (devices.Length == 0)
         {
@@ -80,12 +84,6 @@ public class ScanManager : MonoBehaviour
 
     } 
 
-    public void ForceStart(){
-        if(!isCamAvailable){
-            SetupCamera();
-        }
-    }
-
     IEnumerator ScanCoroutine()
     {
         while (true)
@@ -97,7 +95,13 @@ public class ScanManager : MonoBehaviour
     
     public void OnClick_Scan()
     {
-        if(ScanCo == null)
+        
+
+        if(!isCamAvailable){
+            OnClick_AskAuth();
+        }
+
+        if(ScanCo == null )
         {
             cameratexture.Play();
             ScanCo = ScanCoroutine();
@@ -170,5 +174,25 @@ public class ScanManager : MonoBehaviour
 
     }
 
+    public void OnClick_AskAuth(){
+        Debug.Log(Application.HasUserAuthorization(UserAuthorization.WebCam));
+        if(Application.HasUserAuthorization(UserAuthorization.WebCam)){
+            StartScan.SetActive(true);
+            Intro.SetActive(false);
+            SetupCamera();
+            
+        }else{
+            Application.RequestUserAuthorization(UserAuthorization.WebCam);
+            if(Application.HasUserAuthorization(UserAuthorization.WebCam)){
+                StartScan.SetActive(true);
+                Intro.SetActive(false);
+                SetupCamera();
+                
+            }else{
+                popUpNoAuth.SetActive(true);
+            }
+            
+        }
+    }
 
 }
