@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -382,12 +382,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rawImageBackground: {fileID: 1066072280}
   aspectRatioFitter: {fileID: 1066072282}
-  scanzone: {fileID: 1066072279}
+  scanzone: {fileID: 94440703952674957}
   timeBetweenScans: 1
   scanMessage: {fileID: 1134387058}
   popUp: {fileID: 1120636177}
   scanning: {fileID: 1795972701}
   startScan: {fileID: 94440703952674956}
+  rawImage: {fileID: 1066072278}
 --- !u!1 &68077775
 GameObject:
   m_ObjectHideFlags: 0
@@ -4525,6 +4526,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 25394004}
+        m_TargetAssemblyTypeName: ScanManager, Assembly-CSharp
+        m_MethodName: ForceStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1795972701}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -5709,6 +5722,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 25394004}
+        m_TargetAssemblyTypeName: ScanManager, Assembly-CSharp
+        m_MethodName: ForceStart
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

@@ -18,6 +18,8 @@ public class ScanManager : MonoBehaviour
     public GameObject popUp;
     public GameObject scanning;
     public GameObject startScan;
+    public GameObject rawImage;
+
 
     bool isCamAvailable;
     WebCamTexture cameratexture;
@@ -32,7 +34,14 @@ public class ScanManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ConfigViewPort();
         SetupCamera();
+    }
+
+    public void ConfigViewPort(){
+        #if UNITY_IOS
+            rawImage.transform.localScale = new Vector3(-1, 1, 1);
+        #endif
     }
 
     // Update is called once per frame
@@ -42,6 +51,7 @@ public class ScanManager : MonoBehaviour
         {
             return;
         }
+        
         float ratio = (float)cameratexture.width / (float)cameratexture.height;
         aspectRatioFitter.aspectRatio = ratio;
 
@@ -69,6 +79,12 @@ public class ScanManager : MonoBehaviour
         isCamAvailable = true;
 
     } 
+
+    public void ForceStart(){
+        if(!isCamAvailable){
+            SetupCamera();
+        }
+    }
 
     IEnumerator ScanCoroutine()
     {
@@ -143,6 +159,7 @@ public class ScanManager : MonoBehaviour
         {
             cameratexture.Stop();
             StopCoroutine(ScanCo);
+            ScanCo = null;
         }
     }
 
