@@ -5,6 +5,11 @@ using ZXing;
 using TMPro;
 using UnityEngine.UI;
 
+#if UNITY_ANDROID
+    using UnityEngine.Android;
+#endif
+
+
 public class ScanManager : MonoBehaviour
 {
     public RawImage rawImageBackground;
@@ -36,7 +41,7 @@ public class ScanManager : MonoBehaviour
     void Start()
     {
         ConfigViewPort();
-        SetupCamera();
+        OnClick_AskAuth();
     }
 
     public void ConfigViewPort(){
@@ -174,8 +179,26 @@ public class ScanManager : MonoBehaviour
 
     }
 
-    public void OnClick_AskAuth(){
-        Debug.Log(Application.HasUserAuthorization(UserAuthorization.WebCam));
+    private void AndroidAuth(){
+        if(Permission.HasUserAuthorizedPermission(Permission.Camera)){
+            StartScan.SetActive(true);
+            Intro.SetActive(false);
+            SetupCamera();
+            
+        }else{
+            Permission.RequestUserPermission(Permission.Camera);
+            if(Permission.HasUserAuthorizedPermission(Permission.Camera)){
+                StartScan.SetActive(true);
+                Intro.SetActive(false);
+                SetupCamera();
+                
+            }else{
+                popUpNoAuth.SetActive(true);
+            }
+            
+        }
+    }
+    private void IOSAuth(){
         if(Application.HasUserAuthorization(UserAuthorization.WebCam)){
             StartScan.SetActive(true);
             Intro.SetActive(false);
@@ -193,6 +216,20 @@ public class ScanManager : MonoBehaviour
             }
             
         }
+    }
+
+    public void OnClick_AskAuth(){
+        #if UNITY_IOS
+            IOSAuth();
+            return;
+        #endif
+
+        #if UNITY_ANDROID
+            AndroidAuth();
+            return;
+        #endif
+
+        SetupCamera();
     }
 
 }
