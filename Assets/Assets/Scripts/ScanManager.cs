@@ -46,7 +46,7 @@ public class ScanManager : MonoBehaviour
 
     public void ConfigViewPort(){
         #if UNITY_IOS
-            rawImage.transform.localScale = new Vector3(-1, 1, 1);
+            rawImage.transform.localScale = new Vector3(1, -1, 1);
         #endif
     }
 
