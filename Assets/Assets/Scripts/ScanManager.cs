@@ -20,7 +20,7 @@ public class ScanManager : MonoBehaviour
     public float timeBetweenScans;
 
     public GameObject scanMessage;
-    public GameObject popUp, popUpNoAuth;
+    public GameObject popUp, popUpNoAuth, popUpNoInternet;
     public GameObject scanning;
     public GameObject startScan;
     public GameObject rawImage;
@@ -117,17 +117,28 @@ public class ScanManager : MonoBehaviour
 
     private void TryScan()
     {
+        
         try
         {
             IBarcodeReader reader = new BarcodeReader();
             Result result = reader.Decode(cameratexture.GetPixels32(), cameratexture.width, cameratexture.height);
             if (result != null)
             {
+                if(Application.internetReachability == NetworkReachability.NotReachable){
+                    cameratexture.Stop();
+                    StopCoroutine(ScanCo);
+                    ScanCo = null;
+                    popUpNoInternet.SetActive(true);
+                    startScan.SetActive(true);
+                    scanning.SetActive(false);
+                    
+                }else{
+                    StartCoroutine(Yucatani6WebCalls.CR_User(result.Text, OnCallBack_Initialize_User));
+                    StopCoroutine(ScanCo);
+                    cameratexture.Stop();
+                    ScanCo = null;
+                }
                 
-                StartCoroutine(Yucatani6WebCalls.CR_User(result.Text, OnCallBack_Initialize_User));
-                StopCoroutine(ScanCo);
-                cameratexture.Stop();
-                ScanCo = null;
             }
         }
         catch
@@ -142,6 +153,8 @@ public class ScanManager : MonoBehaviour
             startScan.SetActive(true);
             scanning.SetActive(false);
         }
+        
+        
     }
 
     public void OnCallBack_Initialize_User(object[] list){
@@ -239,5 +252,7 @@ public class ScanManager : MonoBehaviour
 
         SetupCamera();
     }
+
+    
 
 }
