@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Hora del c\xF3digo: primarias"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0be27a938ac456c4a8c9b4143e299820, type: 2}
-  m_sharedMaterial: {fileID: -4041937951824307340, guid: 0be27a938ac456c4a8c9b4143e299820, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c4a5c9485d374427993893564213b03c, type: 2}
+  m_sharedMaterial: {fileID: 7646883771883912112, guid: c4a5c9485d374427993893564213b03c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
