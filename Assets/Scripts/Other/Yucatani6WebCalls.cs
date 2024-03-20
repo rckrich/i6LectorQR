@@ -9,7 +9,7 @@ using UnityEngine.XR;
 
 public class Yucatani6WebCalls : WebCalls
 {
-    public static IEnumerator CR_User(string _pass, WebCallback _callback, int _offset = 0, int _limit = 20)
+    public static IEnumerator CR_GetUserByPass(string _pass, WebCallback _callback, int _offset = 0, int _limit = 20)
     {
         string jsonResult = "";
 

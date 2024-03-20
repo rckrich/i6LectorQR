@@ -133,7 +133,7 @@ public class ScanManager : MonoBehaviour
                     scanning.SetActive(false);
                     
                 }else{
-                    StartCoroutine(Yucatani6WebCalls.CR_User(result.Text, OnCallBack_Initialize_User));
+                    StartCoroutine(Yucatani6WebCalls.CR_GetUserByPass(result.Text, OnCallBack_Initialize_User));
                     StopCoroutine(ScanCo);
                     cameratexture.Stop();
                     ScanCo = null;
