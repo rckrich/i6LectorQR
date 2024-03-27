@@ -14,15 +14,16 @@ public class Animation_TextMesh : MonoBehaviour
     public int numCharactersFade = 3;
     public float charsPerSecond = 30;
     public float smoothSeconds = 0.75f;
+    public GameObject secondText;
     [UnityEngine.Header("References")]
     public TMP_Text text;
     public UnityEvent allRevealed = new UnityEvent();
-
+    public Color color;
 
     private string originalString;
     private int nRevealedCharacters;
     private bool isRevealing = false;
-
+    public bool isSecondText = false;
 
     public bool IsRevealing { get { return isRevealing; } }
 
@@ -99,11 +100,21 @@ public class Animation_TextMesh : MonoBehaviour
             }
 
             keyChar = Mathf.MoveTowards(keyChar, keyCharEnd, speed * Time.deltaTime);
-            text.text = BuildPartiallyRevealedString(original: originalString,
+            if(!secondText){
+                text.text = "<color=#00CAA2B1>";
+                text.text += BuildPartiallyRevealedString(original: originalString,
                                             keyCharIndex: keyChar,
                                             minIndex: nRevealedCharacters,
                                             maxIndex: paragraphEnd,
                                             fadeLength: numCharactersFade);
+            }else{
+                text.text = BuildPartiallyRevealedString(original: originalString,
+                                            keyCharIndex: keyChar,
+                                            minIndex: nRevealedCharacters,
+                                            maxIndex: paragraphEnd,
+                                            fadeLength: numCharactersFade);
+            }
+            
 
             yield return null;
         }
@@ -143,16 +154,32 @@ public class Animation_TextMesh : MonoBehaviour
         var sb = new StringBuilder();
         sb.Append(revealed);
 
-        for (var i = lastFullyVisibleChar + 1; i < firstFullyInvisibleChar; ++i)
+        
+        if (!isSecondText)
         {
-            var c = original[i];
-            var originalColorRGB = ColorUtility.ToHtmlStringRGB(text.color);
-            var alpha = Mathf.RoundToInt(255 * (keyCharIndex - i) / (float)fadeLength);
-            sb.AppendFormat("<color=#{0}{1:X2}>{2}</color>", originalColorRGB, (byte)alpha, c);
+            for (var i = lastFullyVisibleChar + 1; i < firstFullyInvisibleChar; ++i)
+            {
+                var c = original[i];
+                var originalColorRGB = ColorUtility.ToHtmlStringRGB(text.color);
+                var alpha = Mathf.RoundToInt(255 * (keyCharIndex - i) / (float)fadeLength);
+                sb.AppendFormat("<color=#{0}{1:X2}>{2}</color>", originalColorRGB, (byte)alpha, c);
+            }
+            sb.AppendFormat("<color=#00000000>{0}</color>", unrevealed);
+            return sb.ToString();
         }
-
-        sb.AppendFormat("<color=#00000000>{0}</color>", unrevealed);
-        return sb.ToString();
+        else
+        {
+            for (var i = lastFullyVisibleChar + 1; i < firstFullyInvisibleChar; ++i)
+            {
+                var c = original[i];
+                var originalColorRGB = ColorUtility.ToHtmlStringRGB(color);
+                var alpha = Mathf.RoundToInt(255 * (keyCharIndex - i) / (float)fadeLength);
+                sb.AppendFormat("<color=#{0}{1:X2}>{2}</color>", originalColorRGB, (byte)alpha, c);
+            }
+            sb.AppendFormat("<color=#00000000>{0}</color>", unrevealed);
+            return sb.ToString();
+        }
+        
     }
 
 
@@ -168,5 +195,13 @@ public class Animation_TextMesh : MonoBehaviour
             RestartWithText(text.text);
 
         this.RevealNextParagraphAsync();
+    }
+
+    public void AddWhenFinished()
+    {
+        isSecondText = true;
+        secondText.GetComponent<TMP_Text>().enabled = true;
+        secondText.GetComponent<Animation_TextMesh>().enabled = true;
+        
     }
 }
